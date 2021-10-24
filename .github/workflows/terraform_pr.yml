@@ -59,6 +59,7 @@ jobs:
             
             **Pushed By**: ${{ github.actor }}
             **Commit Msg**: ${{ github.actor }}
+            **Commit Msg**: echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD^2)
             `;
             
             github.issues.createComment({
