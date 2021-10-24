@@ -1,11 +1,10 @@
----
 name: "Terraform PR"
 
 "on":
   pull_request:
 
 jobs:
-  terraform:
+  terraform_pr:
     runs-on: ubuntu-latest
     steps:
       # Checkout the repo
@@ -37,7 +36,7 @@ jobs:
         id: plan
         run: terraform plan
 
-      - name: Plan output
+      - name: Output
         id: output
         uses: actions/github-script@v3
         if: github.event_name == 'pull_request'
@@ -58,8 +57,7 @@ jobs:
             </details>
             
             **Pushed By**: ${{ github.actor }}
-            **Commit Msg**: ${{ github.actor }}
-            **Commit Msg**: ${{ echo ::set-output name=commit_message::$(git log --format=%B -n 1 HEAD^2) }}
+            # **Commit Msg**: ${{ github.actor }}
             `;
             
             github.issues.createComment({
@@ -68,80 +66,15 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+  tfsec:
+    name: tfsec PR commenter
+    runs-on: ubuntu-latest
 
-      - name: Run Terrascan
-        id: terrascan
-        uses: accurics/terrascan-action@main
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+
+      - name: tfsec
+        uses: tfsec/tfsec-pr-commenter-action@main
         with:
-          iac_type: 'terraform'
-          iac_version: 'v14'
-          policy_type: 'aws'
-          only_warn: true
-          # iac_dir: infrastructure
-
-
-
-      - name: Terraform apply
-        id: apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: ${{ env.working-directory }}
-        env:
-          TF_VAR_assume_role: "my-github-actions-role"
-
-      # - name: Install InSpec
-      #   uses: actionshub/chef-install@main
-      #   with:
-      #     channel: current
-      #     project: inspec
-
-      # - name: Assume Role
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-region: eu-west-1
-      #     role-to-assume: arn:aws:iam::88888888888888:role/my-github-actions-role
-      #     role-duration-seconds: 600
-      #     role-skip-session-tagging: true          
-
-      # - name: Infrastructure Tests
-      #   id: inspec
-      #   run: inspec exec profile/example --reporter=cli:- progress:inspec.log --input-file=profile/example/attributes-example.yml -t aws://
-      #   env:
-      #     CHEF_LICENSE: accept
-
-      # - name: Infrastructure Test Results 
-      #   id: inspec_results
-      #   if: always()
-      #   run: | 
-      #     REPORT="$(cat inspec.log)"
-      #     REPORT="${REPORT//'%'/'%25'}"
-      #     REPORT="${REPORT//$'\n'/'%0A'}"
-      #     REPORT="${REPORT//$'\r'/'%0D'}"
-      #     echo "::set-output name=loginspec::$REPORT"
-
-      # - name: Infrastructure tests Output
-      #   if: always()      
-      #   uses: actions/github-script@v3
-      #   env:
-      #     INSPEC: "Inspec Test Results \n${{ steps.inspec_results.outputs.loginspec }}"
-      #   with:
-      #     github-token: ${{secrets.GITHUB_TOKEN}}
-      #     script: |
-      #       const output = `#### Inspec Tests 🖌\`${{ steps.inspec.outcome }}\`
-
-      #       <details><summary>Show Test Results</summary>
-
-      #       \`\`\`
-
-      #       ${process.env.INSPEC}
-      #       \`\`\`
-           
-      #       </details>
-
-      #       `;
-      #       github.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: output
-      #       })
+          github_token: ${{ secrets.GITHUB_TOKEN }}
