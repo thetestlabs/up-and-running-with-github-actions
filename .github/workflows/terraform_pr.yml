@@ -58,11 +58,8 @@ jobs:
             \`\`\`
 
             </details>
-            
-            **Pushed By**: ${{ github.actor }}
-            **Commit Msg**: ${{ context.repo.repo }}
             `;
-            
+                        
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
