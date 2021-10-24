@@ -60,7 +60,6 @@ jobs:
             </details>
             
             **Pushed By**: ${{ github.actor }}
-            echo ::set-env name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
             **Commit Msg**: ${{ commitmsg }}
             `;
             
