@@ -60,7 +60,7 @@ jobs:
             </details>
             
             **Pushed By**: ${{ github.actor }}
-            **Commit Msg**: ${{ context.repo.repo }}
+            **github.base_ref	**: ${{ github.base_ref }}
             `;
             
             github.issues.createComment({
