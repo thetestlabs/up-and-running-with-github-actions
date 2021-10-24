@@ -61,8 +61,8 @@ jobs:
 
             </details>
 
-            **Pusher**: @${{ github.actor }}
-            **Action**: ${{ github.event_name }}
+            **Pushed By**: @${{ github.actor }}
+            **Commit Msg**: @${{ github.event.head_commit.message }}
             `;
             github.issues.createComment({
               issue_number: context.issue.number,
