@@ -61,6 +61,7 @@ jobs:
             
             **Pushed By**: ${{ github.actor }}
             **github.base_ref	**: ${{ github.base_ref }}
+            **github	**: ${{ github }}
             `;
             
             github.issues.createComment({
