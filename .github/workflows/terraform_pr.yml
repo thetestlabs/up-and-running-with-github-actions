@@ -58,7 +58,7 @@ jobs:
             </details>
 
             **Pushed By**: ${{ github.actor }}
-            **Commit Msg**: ${{ github.event.commits[0].message }}
+            **Commit Msg**: ${{ git log -1 --pretty=format:"%s" }}
             `;
             github.issues.createComment({
               issue_number: context.issue.number,
