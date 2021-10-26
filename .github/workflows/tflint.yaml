@@ -45,13 +45,15 @@ jobs:
       uses: actions/github-script@v3
       if: github.event_name == 'pull_request'
       env:
-        PLAN: "${{ steps.run.outputs.stdout }}"
+        RUN: "${{ steps.run.outputs.stdout }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          tflint_return="${PIPESTATUS[0]}" exit_code=$?
+          echo "::set-output name=tflint-return-code::${tflint_return}"
           const output = `#### tflint Format Check: \`${{ steps.run.outcome }}\`
-          #### tflint Initialization: \`${{ steps.run.outcome }}\`
-          #### tflint Plan: \`${{ steps.run.outcome }}\`
+          #### tflint Initialization: \`${{ tflint-return-code }}\`
+          #### tflint Plan: \`${{ tflint_return }}\`
           <details><summary>Show Plan</summary>
 
           \`\`\`hcl
