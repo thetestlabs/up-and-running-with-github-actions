@@ -1,7 +1,9 @@
-name: "Terraform PR"
+name: Terraform_PR
 
-"on":
+on:
   pull_request:
+    branches:
+      - main
 
 jobs:
   terraform_pr:
@@ -66,6 +68,20 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+
+  tflint:
+    name: tfsec PR commenter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+
+      - name: tfsec
+        uses: tfsec/tfsec-pr-commenter-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
   tfsec:
     name: tfsec PR commenter
     runs-on: ubuntu-latest
