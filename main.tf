@@ -12,8 +12,15 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-#### The following is a null resource - it will not deploy anything
+#### The following variable is not used anywhere
+variable "some_variable" {
+  description = "A variable that is declared but never used"
+  type = string
+  default = null
+  
+}
 
+#### The following is a null resource - it will not deploy anything
 resource "null_resource" "example" {
   triggers = {
     value = "A example resource that does nothing!"
