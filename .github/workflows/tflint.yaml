@@ -37,7 +37,7 @@ jobs:
 
     - name: Run TFLint
       id: run
-      run: tflint --enable-rule=terraform_unused_declarations -f compact
+      run: echo "::set-output name=cock-lover::$(tflint --enable-rule=terraform_unused_declarations -f compact)\n"
       continue-on-error: true
 
     - name: Output
@@ -51,7 +51,7 @@ jobs:
         script: |
           tflint_return="${PIPESTATUS[0]}" exit_code=$?
           echo "::set-output name=tflint-return-code::${tflint_return}"
-          const output = `#### tflint Format Check: \`${{ steps.run.outcome }}\`
+          const output = `#### tflint Format Check: \`${{ steps.run.outputs }}\`
           #### tflint Initialization: \`${{ tflint-return-code }}\`
           #### tflint Plan: \`${{ tflint_return }}\`
           <details><summary>Show Plan</summary>
