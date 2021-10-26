@@ -45,7 +45,7 @@ jobs:
       uses: actions/github-script@v3
       if: github.event_name == 'pull_request'
       env:
-        RUN: "terraform\n${{ steps.run.outputs.stdout }}"
+        RUN: "tflint\n${{ steps.run.outputs.stdout }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
