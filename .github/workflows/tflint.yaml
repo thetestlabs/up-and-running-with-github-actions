@@ -27,9 +27,10 @@ jobs:
       name: Setup TFLint
       with:
         tflint_version: v0.29.0
-        
+
     - name: Init TFLint
       run: tflint --init
 
     - name: Run TFLint
       run: tflint --enable-rule=terraform_unused_declarations -f compact
+      continue-on-error: true
