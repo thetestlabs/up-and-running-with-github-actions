@@ -75,3 +75,4 @@ jobs:
 
     - name: Run TFLint
       run: tflint --enable-rule=terraform_unused_declarations -f compact
+      continue-on-error: true

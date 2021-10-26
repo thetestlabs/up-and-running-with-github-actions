@@ -1,0 +1,65 @@
+name: Lint
+on:
+  push:
+    branches:
+    - 'feature**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tflint_pr:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout source code
+
+    - uses: actions/cache@v2
+      name: Cache plugin dir
+      with:
+        path: ~/.tflint.d/plugins
+        key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+
+    - uses: terraform-linters/setup-tflint@v1
+      id: setup
+      name: Setup TFLint
+      with:
+        tflint_version: v0.29.0
+
+    - name: Init TFLint
+      id: init
+      run: tflint --init
+
+    - name: Run TFLint
+      id: run
+      run: echo "::set-output name=cock-lover::$(tflint --enable-rule=terraform_unused_declarations -f compact)\n"
+      continue-on-error: true
+
+    - name: Output
+      id: output
+      uses: actions/github-script@v3
+      if: github.event_name == 'pull_request'
+      env:
+        RUN: "${{ steps.run.outputs.stdout }}"
+        TEST: ${{ steps.run.outputs.cock-lover }}
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          \`\`\`hcl
+          ${process.env.RUN}
+          \`\`\`
+
+          </details>
+          `;
+                      
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
