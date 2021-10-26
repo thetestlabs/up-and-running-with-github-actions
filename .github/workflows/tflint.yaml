@@ -49,9 +49,9 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const output = `#### Terraform Format Check: \`${{ steps.run.outcome }}\`
-          #### Terraform Initialization: \`${{ steps.run.outcome }}\`
-          #### Terraform Plan: \`${{ steps.run.outcome }}\`
+          const output = `#### tflint Format Check: \`${{ steps.run.outcome }}\`
+          #### tflint Initialization: \`${{ steps.run.outcome }}\`
+          #### tflint Plan: \`${{ steps.run.outcome }}\`
           <details><summary>Show Plan</summary>
 
           \`\`\`hcl
